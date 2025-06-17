@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🙂 Face Reveals</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0d0d0d;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    nav {
+      background: #1a1a1a;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+
+    .title {
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+
+    .nav-buttons button {
+      margin-left: 10px;
+      padding: 8px 16px;
+      font-size: 1rem;
+      background: #3f3fff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .nav-buttons button:hover {
+      background: #5f5fff;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    input {
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      width: 250px;
+      margin-right: 10px;
+      outline: none;
+    }
+
+    .room-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 500px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .room-input {
+        flex-direction: column;
+        width: 100%;
+      }
+      input {
+        width: 100%;
+        margin-right: 0;
+      }
+      .nav-buttons {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="title">🙂 Face Reveals</div>
+    <div class="nav-buttons">
+      <button onclick="scrollToInput()">Create Room</button>
+      <button onclick="scrollToInput()">Join Room</button>
+    </div>
+  </nav>
+
+  <main>
+    <h2>Enter a Room Name to Begin</h2>
+    <div class="room-input" id="room-section">
+      <input id="roomName" type="text" placeholder="e.g. epicroom123" />
+      <button onclick="joinRoom()">Go</button>
+    </div>
+  </main>
+
+  <script>
+    function scrollToInput() {
+      document.getElementById("room-section").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function joinRoom() {
+      const room = document.getElementById("roomName").value.trim();
+      if (room) {
+        location.href = `/room.html?room=${encodeURIComponent(room)}`;
+      }
+    }
+  </script>
+
+</body>
+</html>
