@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Face Room</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    #videos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 10px;
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px 0;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 10px;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>🙂 Room: <span id="room-name">loading...</span></h1>
+  <div id="videos"></div>
+
+  <!-- 📦 PeerJS CDN -->
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script>
+    const room = new URLSearchParams(location.search).get("room") || "default";
+    document.getElementById("room-name").textContent = room;
+
+    const myVideo = document.createElement("video");
+    myVideo.muted = true;
+
+    const videosDiv = document.getElementById("videos");
+    let myStream;
+    const peers = {};
+
+    const peer = new Peer(undefined, {
+      host: "peerjs.com",
+      secure: true,
+      port: 443,
+    });
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+      myStream = stream;
+      addVideoStream(myVideo, stream);
+
+      peer.on("call", call => {
+        call.answer(stream);
+        const video = document.createElement("video");
+        call.on("stream", userVideoStream => {
+          addVideoStream(video, userVideoStream);
+        });
+      });
+
+      // Broadcast to others
+      peer.on("open", id => {
+        fetch(`https://api.jsonbin.io/v3/b/64d000000000000000000000`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ room, id })
+        });
+        connectToOthersInRoom(id, stream);
+      });
+    });
+
+    function connectToOthersInRoom(myId, stream) {
+      // NOTE: Replace this with Firebase or real signaling later
+      // For now you’d manually list peer IDs or share the link
+      console.warn("This needs Firebase or custom peer discovery to fully work!");
+    }
+
+    function addVideoStream(video, stream) {
+      video.srcObject = stream;
+      video.addEventListener("loadedmetadata", () => {
+        video.play();
+      });
+      videosDiv.appendChild(video);
+    }
+  </script>
+</body>
+</html>
